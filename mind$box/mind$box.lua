@@ -5,6 +5,8 @@ mindbox = {
 }
 local a = mindbox
 
+
+-- ConcatTable
 local function IsEmpty( t, which )
 
 	local check
@@ -105,6 +107,8 @@ local function ConcatTable( ... )
 end
 a.ConcatTable = ConcatTable
 
+
+-- print
 local screens = {
 	"ScreenEdit",
 	"ScreenGameplay"
@@ -142,8 +146,10 @@ local function print( ... )
 end
 a.print = print
 
+
+-- FirstDelta
 local function FirstDelta(self)
 	self.d = self.d or self:GetEffectDelta()
-	Print(self.d)
+	print(self.d)
 end
 a.FirstDelta = FirstDelta
