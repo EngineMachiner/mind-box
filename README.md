@@ -6,7 +6,7 @@
 
 ### Description
 
-Tool to debug and display prints in-game. For StepMania.
+Tool to debug and display prints in-game. For StepMania 5+.
 Check mind$box.lua for more.
 
 ## Installation
