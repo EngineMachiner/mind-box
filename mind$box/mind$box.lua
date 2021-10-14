@@ -1,7 +1,7 @@
 
 mindbox = { 
 	Lim = 40,
-	Theme = 2,
+	Theme = 1,
 	Path = "/Scripts/mind$box/"
 }
 local a = mindbox

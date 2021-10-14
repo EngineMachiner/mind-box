@@ -18,6 +18,8 @@ local h = SCREEN_HEIGHT * ( 1 - m_float )
 local long_sleep
 local n = 4 -- short sleep
 
+local scl = SCREEN_HEIGHT / 720
+
 local function QuadInit(self)
 	self.p = self.p or self:GetParent()
 	self:diffuse(Color.Black)
@@ -98,68 +100,72 @@ return Def.ActorFrame{
 	Def.ActorFrameTexture{
 		Name="TextBlock",
 		InitCommand=function(self)
-			self:setsize( w, h )
+			self:setsize( w * 2, h * 2 )
 			self:EnableAlphaBuffer(true)
 			self:Create()
 		end,
-		Def.BitmapText{
-			Font=f_path,
-			InitCommand=function(self)
-				self:halign(0)
-				self:x( w * m_float - 13 )
-			end,
-			PrintCommand=function(self)
+		Def.ActorFrame{
+			Def.BitmapText{
+				Font=f_path,
+				InitCommand=function(self)
+					self:halign(0)
+					self:x( w * m_float - 13 * scl )
+					self:GetParent():zoom(2)
+				end,
+				PrintCommand=function(self)
 
-				local p = self:GetParent():GetParent()
+					local p = self:GetParent():GetParent()
+					p = p:GetParent()
 
-				local c = {}
-				while #c < 4 do
-					local num = math.random(500,1000)
-					num = num * 0.001
-					c[#c+1] = tostring(num) .. ","
+					local c = {}
+					while #c < 4 do
+						local num = math.random(500,1000)
+						num = num * 0.001
+						c[#c+1] = tostring(num) .. ","
+					end
+					local colour = c[1] .. c[2] .. c[3] .. "1"
+					colour = color(colour)
+
+					p:RunCommandsOnChildren(function(c) 
+						c:finishtweening() 
+					end)
+
+					self:settext(p.TextString)
+					self:diffuse(colour)
+
+					self:zoom(1)
+					if self:GetWidth() > w then
+						local v = self:GetWidth()
+						v = w * ( 1 - m_float * 2 ) / v
+						self:zoom( v )
+					end
+
+					local h2 = self:GetZoomedHeight()
+					self:y( h2 * 0.5 + 40 * scl )
+
+					if h2 > h then
+
+						local a = self:GetY()
+						local b = ( h2 - h ) + 80 * scl
+						long_sleep = b * 8 / h
+
+						b = a - b
+						self.Y = b
+
+						self:sleep(n)
+						self:queuecommand("Scroll")
+						p:queuecommand("Fade")
+
+					end
+
+					p:queuecommand("WaitNFade")
+
+				end,
+				ScrollCommand=function(self)
+					self:linear(long_sleep)
+					self:y( self.Y )
 				end
-				local colour = c[1] .. c[2] .. c[3] .. "1"
-				colour = color(colour)
-
-				p:RunCommandsOnChildren(function(c) 
-					c:finishtweening() 
-				end)
-
-				self:settext(p.TextString)
-				self:diffuse(colour)
-
-				self:zoom(1)
-				if self:GetWidth() > w then
-					local v = self:GetWidth()
-					v = w * ( 1 - m_float * 2 ) / v
-					self:zoom( v )
-				end
-
-				local h2 = self:GetZoomedHeight()
-				self:y( h2 * 0.5 + 40 )
-
-				if h2 > h then
-
-					local a = self:GetY()
-					local b = ( h2 - h ) + 80
-					long_sleep = b * 8 / h
-
-					b = a - b
-					self.Y = b
-
-					self:sleep(n)
-					self:queuecommand("Scroll")
-					p:queuecommand("Fade")
-
-				end
-
-				p:queuecommand("WaitNFade")
-
-			end,
-			ScrollCommand=function(self)
-				self:linear(long_sleep)
-				self:y( self.Y )
-			end
+			}
 		}
 	},
 	Def.Sprite{
@@ -167,7 +173,7 @@ return Def.ActorFrame{
 			self.p = self:GetParent()
 			local aft = self.p:GetChild("TextBlock")
 			local tex = aft:GetTexture()
-			self:SetTexture(tex)
+			self:SetTexture(tex):zoom(0.5)
 		end
 	},
 
@@ -228,10 +234,11 @@ return Def.ActorFrame{
 		end
 	},
 
+	-- Title
 	Def.ActorFrame{
 		InitCommand=function(self)
 			self:y( - h * 0.476 )
-			self:zoom(0.5)
+			self:zoom(0.5 * scl)
 		end,
 
 		Def.Quad{
@@ -239,16 +246,6 @@ return Def.ActorFrame{
 				self:setsize(300, 50)
 				self:diffuse(color("#202020"))
 				self:fadeleft(0.25):faderight(0.25)
-			end
-		},
-
-		Def.BitmapText{
-			Font=f_path,
-			InitCommand=function(self)
-				self:diffuse(color("#000000"))
-				self:diffusealpha(0.6)
-				self:xy( -3, 3 )
-				self:settext("mind$box")
 			end
 		},
 
