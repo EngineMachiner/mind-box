@@ -133,8 +133,8 @@ local function ConcatTable( ... )
 
 	local final = Reload( tbl_init )
 	final = final:gsub("/BGAnimations/Resources/", "../")
-	if GAMESTATE then
-		local song = GAMESTATE:GetCurrentSong()
+	local song = GAMESTATE:GetCurrentSong()
+	if song then
 		song = song:GetSongDir():gsub("(%p)", "%%%1")
 		final = final:gsub(song,"../SongFolder/")
 	end
@@ -144,44 +144,39 @@ local function ConcatTable( ... )
 end
 a.ConcatTable = ConcatTable
 
-
 -- print
-local screens = {
-	"ScreenEdit",
-	"ScreenGameplay"
-}
+local function print( self, ... )
 
-local function print( ... )
+	if not type(self) ~= "table"
+	and not self.ctx then
 
-	local screen = SCREENMAN:GetTopScreen()
-	mindbox.Beat = false
-	for k,v in pairs( screens ) do
-		if screen:GetName() == v then
-			mindbox.Beat = true break
+		local s = "ERROR: The first argument"
+		s = s .. " has to be an Actor! \n"
+		--SCREENMAN:SystemMessage(s)
+		return Def.Actor{}
+
+	else
+
+		mindbox.TextToDo = ...
+		mindbox.Trace = debug.traceback(2)
+
+		local p = self
+		while p:GetParent() do
+			p = p:GetParent()
 		end
+
+		local path = mindbox.Path .. "Console.lua"
+		local child = p:GetChild("mindbox-Console")
+		if not child then
+			p:AddChildFromPath(path)
+		end
+		child = p:GetChild("mindbox-Console")
+		child:playcommand("Load")
+
 	end
-
-	local old = mindbox.Lim
-	mindbox.Lim = 40
-
-	local s = ConcatTable( ... )
-	s = s .. "\n\n" .. ConcatTable( debug.traceback() )
-
-	local pb = SCREENMAN:GetTopScreen():GetChild("mb_paper")
-	if not pb then
-		local path = mindbox.Path .. "PrintedPaper.lua"
-		SCREENMAN:GetTopScreen():AddChildFromPath(path)
-	end
-
-	pb = SCREENMAN:GetTopScreen():GetChild("mb_paper")
-	pb.TextString = s
-	pb:queuecommand("Print")
-
-	mindbox.Lim = old
 
 end
 a.print = print
-
 
 -- FirstDelta
 local function FirstDelta(self)

@@ -29,7 +29,6 @@ end
 
 return Def.ActorFrame{
 
-	Name = "mb_paper",
 	InitCommand=function(self)
 
 		self.Lock = {}
@@ -130,7 +129,7 @@ return Def.ActorFrame{
 						c:finishtweening() 
 					end)
 
-					self:settext(p.TextString)
+					self:settext(mindbox.TextString)
 					self:diffuse(colour)
 
 					self:zoom(1)
