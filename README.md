@@ -14,6 +14,6 @@ The log font ("_eurostile Outline") is originally from the Soundwaves theme.
 ## Installation
 
 Drop the mind$box folder in the Scripts folder.
-Run the functions in your Lua scripts.
+Run the functions like mindbox.print() in your Lua scripts.
 
  
