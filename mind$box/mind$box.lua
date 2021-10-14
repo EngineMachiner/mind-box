@@ -71,7 +71,9 @@ local function ConcatTable( ... )
 					s.str = s.str .. "\n" .. s.spc
 				end
 
-				s.str = s.str .. "\n" .. s.spc
+				if smth ~= tbl_init then
+					s.str = s.str .. "\n" .. s.spc
+				end
 				s.str = s.str .. s_key
 				Reload(v)
 				
@@ -113,7 +115,6 @@ local function ConcatTable( ... )
 					s_key = i > 1 and a .. s_key or s_key
 					s_val = s_val .. last
 				end
-
 				s.str = s.str .. s_key .. s_val
 
 			end
@@ -131,7 +132,6 @@ local function ConcatTable( ... )
 	end
 
 	local final = Reload( tbl_init )
-	final = final:sub(2,#final)
 	final = final:gsub("/BGAnimations/Resources/", "../")
 	if GAMESTATE then
 		local song = GAMESTATE:GetCurrentSong()
