@@ -143,7 +143,6 @@ return Def.ActorFrame{
 					local a = self:GetY()
 					local b = ( h2 - h ) + 80
 					long_sleep = b * 8 / h
-					SCREENMAN:SystemMessage(long_sleep)
 
 					b = a - b
 					self.Y = b

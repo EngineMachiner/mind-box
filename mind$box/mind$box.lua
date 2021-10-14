@@ -101,6 +101,7 @@ local function ConcatTable( ... )
 					s_key = i > 1 and s.spc .. s_key or s_key
 					s.Lim = s_key
 					s.Lim = s.Lim .. s_val .. last
+					if #s.Lim > lim then lim = #s.Lim end
 				end
 				
 				local nl = smth == former and "\n" or ""
