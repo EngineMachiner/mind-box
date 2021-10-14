@@ -1,10 +1,10 @@
 
 mindbox = { 
 	Lim = 40,
-	Theme = 2
+	Theme = 2,
+	Path = "/Scripts/mind$box/"
 }
 local a = mindbox
-
 
 -- ConcatTable
 local function IsEmpty( t, which )
@@ -17,7 +17,7 @@ local function IsEmpty( t, which )
 	local s = which or "Start"
 
 	local tbl = {
-		Start = function() return check and " \n" or "" end
+		Start = function() return check and "\n" or "" end
 	}
 
 	return tbl[s]()
@@ -27,74 +27,110 @@ end
 local function ConcatTable( ... )
 
 	local lim = mindbox.Lim
+
 	local tbl_init = { ... }
 	local s = { Lim = "" }
 	s.str, s.spc = "", ""
 	
 	local args = ...
-	local function Reload( tbl )
+	local former
+	local function Reload( smth )
 
-		if tbl ~= tbl_init then
-			s.spc = s.spc .. "    "
-			s.str = tostring(tbl) .. " {" .. IsEmpty(tbl)
+		local s_type = ""
+		if smth ~= tbl_init then
+			former = former or smth
+			s_type = tostring(smth) .. " {"
+			s_type = s_type .. IsEmpty(smth)
+			s.str = s.str .. s_type
 		end
-		s.str = tbl == args and s.str .. "\n" or s.str
 
       	local lst_i = 0
-      	for k,v in pairs( tbl ) do
+      	for k,v in pairs( smth ) do
         	lst_i = lst_i + 1
       	end
 
-    	local i = 0
-	   	for k,v in pairs( tbl ) do
+		if lst_i > 0
+		and smth ~= tbl_init then
+			s.spc = s.spc .. "    "
+		end
 
-			local val = tostring(v)
-			local s1 = type(v) == "table" and "\n" or ""
-			s1 = s.str .. s1 .. s.spc
-			local sp = [["]] .. k .. [["]] .. " = "
-			s1 = s1 .. sp
+    	local i, b4 = 0
+	   	for k,v in pairs( smth ) do
 
-        	i = i + 1
-		   	if type(k) == "number" then
-				s1 = k == 1 and s.str .. s.spc or s.str
-		   	end
+			i = i + 1
 
+			local last = i == lst_i and "" or ","
+			local s_val = tostring(v)
+			local s_key = [["]] .. k .. [["]] .. " = "
+			s_key = type(k) == "number" and "" or s_key
+			
 			if type(v) == "table" then
 
-				val = Reload(v)
-				s.spc = s.spc:sub(1,#s.spc-4)
-				val = val .. s.spc .. "}"
+				if type(b4) ~= "table"
+				and i > 1 then
+					s.str = s.str .. "\n" .. s.spc
+				end
 
-				-- Check if empty
-				val = val:gsub("{    }","{}")
+				s.str = s.str .. "\n" .. s.spc
+				s.str = s.str .. s_key
+				Reload(v)
+				
+				s_val = "}" .. last
+				if IsEmpty(v) == "\n" then
+					s.spc = s.spc:sub(1,#s.spc-4)
+					local spc = "\n" .. s.spc
+					s_val = spc .. s_val
+				end
 				s.Lim = ""
 
-			end
+				s.str = s.str .. s_val
 
-			local s2 = val .. ",\n"
-
-			if type(v) ~= "table" then
-				if #sp + #val + 1 <= lim and #s.Lim <= lim then
-					s.Lim = s.Lim .. sp .. val .. ","
-					s2 = val .. ", "
-				end
 			else
-				s2 = s2 .. IsEmpty(v)
+
+				if type(b4) == "table" then
+					s.str = s.str .. "\n\n" .. s.spc
+				end
+
+				s.Lim = s.Lim .. s_key
+				s.Lim = s.Lim .. s_val .. last
+
+				local a = "\n"
+				if #s.Lim <= lim then 
+					a = " "
+				else
+					s_key = i > 1 and s.spc .. s_key or s_key
+					s.Lim = s_key
+					s.Lim = s.Lim .. s_val .. last
+				end
+				
+				local nl = smth == former and "\n" or ""
+				s_key = i == 1 and nl .. s.spc .. s_key or s_key
+				
+				if a == " " then
+					s_val = s_val .. last .. a
+				else
+					s_key = i > 1 and a .. s_key or s_key
+					s_val = s_val .. last
+				end
+
+				s.str = s.str .. s_key .. s_val
+
 			end
 
-			s2 = i == lst_i and val .. "\n" or s2
+			if i == lst_i and smth == former then
+				s.str = s.str .. "\n"
+			end
 
-			s.str = s1 .. s2
+			b4 = v
 
 	    end
-
-		s.str = tbl == args and s.str .. "\n" or s.str
 
 	    return s.str 
 
 	end
 
 	local final = Reload( tbl_init )
+	final = final:sub(2,#final)
 	final = final:gsub("/BGAnimations/Resources/", "../")
 	if GAMESTATE then
 		local song = GAMESTATE:GetCurrentSong()
@@ -125,16 +161,15 @@ local function print( ... )
 	end
 
 	local old = mindbox.Lim
-	mindbox.Lim = 13
+	mindbox.Lim = 40
 
 	local s = ConcatTable( ... )
-	--s = s .. "\n" .. ConcatTable( debug.traceback() ) 
-	s = s .. "\n"
+	s = s .. "\n\n" .. ConcatTable( debug.traceback() )
 
 	local pb = SCREENMAN:GetTopScreen():GetChild("mb_paper")
 	if not pb then
-		local s = "/Scripts/mind$box/PrintedPaper.lua"
-		SCREENMAN:GetTopScreen():AddChildFromPath(s)
+		local path = mindbox.Path .. "PrintedPaper.lua"
+		SCREENMAN:GetTopScreen():AddChildFromPath(path)
 	end
 
 	pb = SCREENMAN:GetTopScreen():GetChild("mb_paper")

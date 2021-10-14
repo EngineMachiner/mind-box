@@ -1,9 +1,21 @@
 
+local windows = {
+	"Window.png",
+	"Window_2.png"
+}
+
+local f_path = mindbox.Path
+local tex = f_path
+
+f_path = f_path .. "Font/_eurostile Outline/30px.ini"
+tex = tex .. windows[mindbox.Theme]
+
 local m_float = 0.0625
 
 local w = SCREEN_WIDTH * ( 0.5 - m_float )
 local h = SCREEN_HEIGHT * ( 1 - m_float )
 
+local long_sleep
 local n = 4 -- short sleep
 
 local function QuadInit(self)
@@ -12,11 +24,6 @@ local function QuadInit(self)
 	self:diffusealpha(0.875)
 	self:setsize( w, h )
 end
-
-local windows = {
-	"Window.png",
-	"Window_2.png"
-}
 
 return Def.ActorFrame{
 
@@ -96,7 +103,7 @@ return Def.ActorFrame{
 			self:Create()
 		end,
 		Def.BitmapText{
-			Font="_eurostile normal.ini",
+			Font=f_path,
 			InitCommand=function(self)
 				self:halign(0)
 				self:x( w * m_float - 13 )
@@ -107,18 +114,24 @@ return Def.ActorFrame{
 
 				local c = {}
 				while #c < 4 do
-					c[#c+1] = tostring( math.random(500,1000) * 0.001 ) .. ","
+					local num = math.random(500,1000)
+					num = num * 0.001
+					c[#c+1] = tostring(num) .. ","
 				end
-				local colour = color(c[1] .. c[2] .. c[3] .. "1")
+				local colour = c[1] .. c[2] .. c[3] .. "1"
+				colour = color(colour)
 
-				p:RunCommandsOnChildren(function(c) c:finishtweening() end)
+				p:RunCommandsOnChildren(function(c) 
+					c:finishtweening() 
+				end)
+
 				self:settext(p.TextString)
 				self:diffuse(colour)
 
 				self:zoom(1)
 				if self:GetWidth() > w then
 					local v = self:GetWidth()
-					v =  w * ( 1 - m_float * 2 ) / v
+					v = w * ( 1 - m_float * 2 ) / v
 					self:zoom( v )
 				end
 
@@ -128,10 +141,12 @@ return Def.ActorFrame{
 				if h2 > h then
 
 					local a = self:GetY()
-					local b = a - ( h2 - h ) - 20
+					local b = ( h2 - h ) + 80
+					long_sleep = b * 8 / h
+					SCREENMAN:SystemMessage(long_sleep)
+
+					b = a - b
 					self.Y = b
-					long_sleep = b / a
-					long_sleep = math.abs(long_sleep)
 
 					self:sleep(n)
 					self:queuecommand("Scroll")
@@ -204,7 +219,7 @@ return Def.ActorFrame{
 
 	-- Window
 	Def.Sprite{
-		Texture="/Scripts/mind$box/" .. windows[mindbox.Theme],
+		Texture=tex,
 		InitCommand=function(self)
 			self:setsize( w * 1.05, h * 1.025 )
 			self:SetTextureFiltering(false)
@@ -229,7 +244,7 @@ return Def.ActorFrame{
 		},
 
 		Def.BitmapText{
-			Font="_eurostile normal.ini",
+			Font=f_path,
 			InitCommand=function(self)
 				self:diffuse(color("#000000"))
 				self:diffusealpha(0.6)
@@ -239,7 +254,7 @@ return Def.ActorFrame{
 		},
 
 		Def.BitmapText{
-			Font="_eurostile normal.ini",
+			Font=f_path,
 			InitCommand=function(self)
 				self:settext("mind$box")
 				self:diffuse(color("#959595"))

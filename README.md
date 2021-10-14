@@ -9,6 +9,8 @@
 Tool to debug and display prints in-game. For StepMania.
 Check mind$box.lua for more.
 
+The log font ("_eurostile Outline") is originally from the Soundwaves theme.
+
 ## Installation
 
 Drop the mind$box folder in the Scripts folder.
