@@ -152,7 +152,7 @@ local function print( self, ... )
 
 		local s = "ERROR: The first argument"
 		s = s .. " has to be an Actor! \n"
-		--SCREENMAN:SystemMessage(s)
+		SCREENMAN:SystemMessage(s)
 		return Def.Actor{}
 
 	else
