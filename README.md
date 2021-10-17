@@ -8,7 +8,7 @@ https://user-images.githubusercontent.com/15896027/137427034-f411f697-c420-409d-
 
 ### Description
 
-Tool to debug and display prints in-game. For StepMania 5+.
+Tool and library to debug and display prints in-game. For StepMania 5+.
 Check mind$box.lua for more.
 
 The log font ("_eurostile Outline") is originally from the Soundwaves theme.
