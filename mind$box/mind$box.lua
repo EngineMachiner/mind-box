@@ -1,196 +1,102 @@
 
 mindbox = { 
-	Lim = 40,
-	Theme = 1,
-	Path = "/Scripts/mind$box/"
+	Lim = 40, -- One line / row char limit
+	Theme = { Graphic = 1, Text = 1 },
+	Path = "/Scripts/mind$box/",
+	ToShow = { Indexes = false, Trace = false }
 }
-local a = mindbox
 
--- ConcatTable
-local function IsEmpty( t, which )
+local function ConcatValues( tbl, moveTo, showIndexes, spaces )
 
-	local check
-	for k,v in pairs(t) do
-		local s_k = tostring(k)
-		if v and not s_k:match("ctx")
-		and not s_k:match("__%a") then 
-			check = true break 
-		end
+	spaces = spaces or ''
+
+	-- Convert indexed nil to strings
+	for i=1,#tbl do 
+		if tbl[i] == nil then tbl[i] = tostring(nil) end 
 	end
 
-	local s = which or "Start"
+	local lastKey
+	for k,v in pairs(tbl) do lastKey = k end
 
-	local tbl = {
-		Start = function() return check and "\n" or "" end
-	}
+	for k,v in pairs(tbl) do
 
-	return tbl[s]()
-	
-end
+		local newVal = tostring(v)
 
-local function ConcatTable( ... )
+		if tostring(v):match("table") then
 
-	local lim = mindbox.Lim
+			spaces = spaces .. "    "
 
-	local tbl_init = { ... }
-	local s = { Lim = "" }
-	s.str, s.spc = "", ""
-	
-	local args = ...
-	local former
-	local function Reload( smth )
+			newVal = ConcatValues(v, {}, showIndexes, spaces)
 
-		local s_type = ""
-		if smth ~= tbl_init then
-			former = former or smth
-			s_type = tostring(smth) .. " {"
-			s_type = s_type .. IsEmpty(smth)
-			s.str = s.str .. s_type
+			newVal = "{ \n" .. table.concat(newVal)
+
+			spaces = spaces:sub(1, #spaces - 4)
+			
+			newVal = newVal .. '\n' .. spaces .. "}"
+			
 		end
 
-      	local lst_i = 0
-      	for k,v in pairs( smth ) do
-        	lst_i = lst_i + 1
-      	end
-
-		if lst_i > 0
-		and smth ~= tbl_init then
-			s.spc = s.spc .. "    "
+		local tblSkip = ''
+		if tostring(v):match("table") then tblSkip = '\n' end
+		
+		if lastKey ~= k then 
+			newVal = newVal .. ",\n" .. tblSkip
 		end
 
-    	local i, b4 = 0
-	   	for k,v in pairs( smth ) do
+		if type(k) == "number" and not showIndexes then 
+			moveTo[k] = tblSkip .. spaces .. newVal
+		else 
 
-			i = i + 1
-
-			local last = i == lst_i and "" or ","
-			local s_val = tostring(v)
-			local s_key = [["]] .. k .. [["]] .. " = "
-			s_key = type(k) == "number" and "" or s_key
-
-			if not s_key:match("ctx") and not s_key:match("__%a") then
-
-				if type(v) == "table" then
-
-					if type(b4) ~= "table"
-					and i > 1 then
-						s.str = s.str .. "\n" .. s.spc
-					end
-
-					if smth ~= tbl_init then
-						s.str = s.str .. "\n" .. s.spc
-					end
-					s.str = s.str .. s_key
-					Reload(v)
-					
-					s_val = "}" .. last
-					if IsEmpty(v) == "\n" then
-						s.spc = s.spc:sub(1,#s.spc-4)
-						local spc = "\n" .. s.spc
-						s_val = spc .. s_val
-					end
-					s.Lim = ""
-
-					s.str = s.str .. s_val
-
-				else
-
-					if type(b4) == "table" then
-						s.str = s.str .. "\n\n" .. s.spc
-					end
-
-					s.Lim = s.Lim .. s_key
-					s.Lim = s.Lim .. s_val .. last
-
-					local a = "\n"
-					if #s.Lim <= lim then 
-						a = " "
-					else
-						s_key = i > 1 and s.spc .. s_key or s_key
-						s.Lim = s_key
-						s.Lim = s.Lim .. s_val .. last
-						if #s.Lim > lim then lim = #s.Lim end
-					end
-					
-					local nl = smth == former and "\n" or ""
-					s_key = i == 1 and nl .. s.spc .. s_key or s_key
-					
-					if a == " " then
-						s_val = s_val .. last .. a
-					else
-						s_key = i > 1 and a .. s_key or s_key
-						s_val = s_val .. last
-					end
-					s.str = s.str .. s_key .. s_val
-
-				end
-
-				if i == lst_i and smth == former then
-					s.str = s.str .. "\n"
-				end
-
-				b4 = v
-
-			else
-				s.spc = s.spc:sub(1,#s.spc-4)
+			if showIndexes and type(k) == "number" then 
+				k = '[' .. tostring(k) .. ']' 
 			end
 
-	    end
+			if k == "" then k = '""' end
+			moveTo[#moveTo+1] = tblSkip .. spaces .. k .. " = " .. newVal 
 
-	    return s.str 
+		end
 
 	end
 
-	local final = Reload( tbl_init )
-	final = final:gsub("/BGAnimations/Resources/", "../")
+	return moveTo
+
+end
+
+-- print functions
+
+local function loadDefConfig()
+	mindbox.ToShow.Indexes = false
+	mindbox.ToShow.Trace = false
+end
+
+local function print( ... )
+
+	local tbl = table.pack(...)		tbl.n = nil
+	tbl = ConcatValues( tbl, {}, mindbox.ToShow.Indexes )
+
+	local s = table.concat( tbl )
+
+	if mindbox.ToShow.Trace then
+		mindbox.Trace = debug.traceback(2)
+		s = s .. "\n\n" .. mindbox.Trace
+	end
+
+	s = s:gsub("/BGAnimations/Resources/", "../")
 	local song = GAMESTATE:GetCurrentSong()
 	if song then
 		song = song:GetSongDir():gsub("(%p)", "%%%1")
-		final = final:gsub(song,"../SongFolder/")
+		s = s:gsub(song,"../SongsFolder/")
 	end
 
-	return final
+	mindbox.ConcatInfo = s
+	
+	MESSAGEMAN:Broadcast("mindboxConsoleInit")
+	
+	loadDefConfig()
 
 end
-a.ConcatTable = ConcatTable
+mindbox.print = print
 
--- print
-local function print( self, ... )
-
-	if not type(self) ~= "table"
-	and not self.ctx then
-
-		local s = "ERROR: The first argument"
-		s = s .. " has to be an Actor! \n"
-		SCREENMAN:SystemMessage(s)
-		return Def.Actor{}
-
-	else
-
-		mindbox.TextToDo = ...
-		mindbox.Trace = debug.traceback(2)
-
-		local p = self
-		while p:GetParent() do
-			p = p:GetParent()
-		end
-
-		local path = mindbox.Path .. "Console.lua"
-		local child = p:GetChild("mindbox-Console")
-		if not child then
-			p:AddChildFromPath(path)
-		end
-		child = p:GetChild("mindbox-Console")
-		child:playcommand("Load")
-
-	end
-
+mindbox.SpawnConsole = function()
+	return loadfile(mindbox.Path .. "Console/Main.lua")()
 end
-a.print = print
-
--- FirstDelta
-local function FirstDelta(self)
-	self.d = self.d or self:GetEffectDelta()
-	print(self.d)
-end
-a.FirstDelta = FirstDelta
