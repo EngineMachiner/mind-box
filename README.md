@@ -13,11 +13,11 @@ Check mind$box.lua for more.
 
 The log font ("_eurostile Outline") is originally from the Soundwaves theme.
 
-## Installation
+## Usage
 
-Drop the mind$box folder in the Scripts folder.
-Add mindbox.SpawnConsole() as an additional actor in the script you want for the console to show up (beware actors draw order).
-Run the functions like mindbox.print() in your Lua scripts.
+1. Drop the mind$box folder in the Scripts folder.
+2. Add mindbox.SpawnConsole() as an additional actor in the script you want for the console to show up (beware actors draw order).
+3. Run the functions like mindbox.print() in your Lua scripts.
 
 ## Credits
 - AwfulRanger (for being available and answering my questions about Lua)
