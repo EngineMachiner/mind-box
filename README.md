@@ -8,7 +8,7 @@ https://user-images.githubusercontent.com/15896027/137427034-f411f697-c420-409d-
 
 ### Description
 
-Tool and library to debug and display prints in-game. For StepMania 5+.
+Tool and library to debug and display stuff / prints in-game. For OutFox / SM5+.
 Check mind$box.lua for more.
 
 The log font ("_eurostile Outline") is originally from the Soundwaves theme.
@@ -16,6 +16,7 @@ The log font ("_eurostile Outline") is originally from the Soundwaves theme.
 ## Installation
 
 Drop the mind$box folder in the Scripts folder.
+Add mindbox.SpawnConsole() as an additional actor in the script you want for the console to show up (beware actors draw order).
 Run the functions like mindbox.print() in your Lua scripts.
 
 ## Credits
