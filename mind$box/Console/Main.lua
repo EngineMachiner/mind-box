@@ -8,7 +8,7 @@ return Def.ActorFrame{
 		local oldLim = mindbox.Lim		mindbox.Lim = 40
 		
 		self:AddChildFromPath(mindbox.Path .. "Console/Core.lua")
-		self:queuecommand("Print")
+		self:playcommand("Print")
 
 		mindbox.Lim = oldLim
 

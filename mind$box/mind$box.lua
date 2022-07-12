@@ -3,10 +3,24 @@ mindbox = {
 	Lim = 40, -- One line / row char limit
 	Theme = { Graphic = 1, Text = 1 },
 	Path = "/Scripts/mind$box/",
-	ToShow = { Indexes = false, Trace = false }
+	Config = {}
 }
 
-local function ConcatValues( tbl, moveTo, showIndexes, spaces )
+local function remove(tbl)
+
+	for k,v in pairs(tbl) do
+		if type(v) == "table" then remove(v) end
+	end
+
+	if tbl.ctx then tbl.ctx = nil end
+
+end
+
+local function ConcatValues( tbl, moveTo, spaces )
+
+	local config = mindbox.Config
+
+	remove(tbl)
 
 	spaces = spaces or ''
 
@@ -18,17 +32,26 @@ local function ConcatValues( tbl, moveTo, showIndexes, spaces )
 	local lastKey
 	for k,v in pairs(tbl) do lastKey = k end
 
+	--
+
 	for k,v in pairs(tbl) do
 
 		local newVal = tostring(v)
 
-		if tostring(v):match("table") then
+		if type(v) == "table" then
 
 			spaces = spaces .. "    "
 
-			newVal = ConcatValues(v, {}, showIndexes, spaces)
+			-- Only objects / actors allowed, not tables
+			-- dunno why table.GetChildren exists
+			if v.GetChildren and config.Children
+			and not tostring(v):match("table") then
+				v.Children = v:GetChildren()
+			end
 
-			newVal = "{ \n" .. table.concat(newVal)
+			newVal = ConcatValues(v, {}, spaces)
+
+			newVal = tostring(v) .. " { \n" .. table.concat(newVal)
 
 			spaces = spaces:sub(1, #spaces - 4)
 			
@@ -37,17 +60,17 @@ local function ConcatValues( tbl, moveTo, showIndexes, spaces )
 		end
 
 		local tblSkip = ''
-		if tostring(v):match("table") then tblSkip = '\n' end
+		if type(v) == "table" then tblSkip = '\n' end
 		
 		if lastKey ~= k then 
 			newVal = newVal .. ",\n" .. tblSkip
 		end
 
-		if type(k) == "number" and not showIndexes then 
+		if type(k) == "number" and not config.Indexes then 
 			moveTo[k] = tblSkip .. spaces .. newVal
 		else 
 
-			if showIndexes and type(k) == "number" then 
+			if config.Indexes and type(k) == "number" then 
 				k = '[' .. tostring(k) .. ']' 
 			end
 
@@ -65,18 +88,19 @@ end
 -- print functions
 
 local function loadDefConfig()
-	mindbox.ToShow.Indexes = false
-	mindbox.ToShow.Trace = false
+	mindbox.Config.Indexes = false
+	mindbox.Config.Trace = false
+	mindbox.Config.Children = false
 end
 
 local function print( ... )
 
 	local tbl = table.pack(...)		tbl.n = nil
-	tbl = ConcatValues( tbl, {}, mindbox.ToShow.Indexes )
+	tbl = ConcatValues( tbl, {} )
 
 	local s = table.concat( tbl )
 
-	if mindbox.ToShow.Trace then
+	if mindbox.Config.Trace then
 		mindbox.Trace = debug.traceback(2)
 		s = s .. "\n\n" .. mindbox.Trace
 	end

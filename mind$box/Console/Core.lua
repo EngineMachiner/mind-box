@@ -1,4 +1,7 @@
 
+-- Can't load svg's because these contain gradients and
+-- they won't be loaded (maybe in the future)
+
 local windows = {
 	"Window.png",	"Window_2.png"
 }
