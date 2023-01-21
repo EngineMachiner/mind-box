@@ -5,8 +5,6 @@ local border = { w = SCREEN_CENTER_X * 0.1, h = SCREEN_HEIGHT * 0.1 }
 local w = SCREEN_CENTER_X - border.w * 2		local h = SCREEN_HEIGHT - border.h
 local innerQuad = { w = w - border.w * 0.5, h = h - border.h * 0.5 }
 
-local limY = innerQuad.h * 0.875
-
 local tweenTime = 3					local stayOn, waitOn = tweenTime, tweenTime * 2
 
 local zoomScale = 720 / SCREEN_HEIGHT
@@ -56,7 +54,6 @@ return Def.ActorFrame{
 
 		Name="TextBlock",
 		InitCommand=function(self)
-			zoomScale = 720 / SCREEN_HEIGHT
 			self:setsize( innerQuad.w * zoomScale, innerQuad.h * zoomScale )
 			self:EnableAlphaBuffer(true):Create()
 		end,
@@ -67,6 +64,9 @@ return Def.ActorFrame{
 			InitCommand=function(self) self:halign(0) end,
 			PrintCommand=function(self)
 
+				zoomScale = 720 / SCREEN_HEIGHT
+				local limY = innerQuad.h * 0.875 * zoomScale
+				
 				local color = Color.White
 				stayOn, waitOn = tweenTime, tweenTime
 				local customColor = mindbox.Theme.Font.Color
