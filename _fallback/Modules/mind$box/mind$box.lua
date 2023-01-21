@@ -123,8 +123,13 @@ local function concat( tbl, moveTo, spaces )
 
 		if isIndex then
 
-			if config.showIndexes then	k = '[' .. tostring(k) .. ']'
+			if config.showIndexes then
+
+				k = '[' .. tostring(k) .. ']' 
+				moveTo[#moveTo+1] = newLines .. spaces .. k .. " = " .. s
+
 			else moveTo[k] = newLines .. spaces .. s end
+			
 
 		else
 
@@ -151,7 +156,7 @@ local function print( ... )
 	local s = table.concat(tbl)
 
 	if config.showTraces then
-		s = s .. "\n\n" .. debug.showTracesback(2)
+		s = s .. "\n\n" .. debug.traceback(2)
 	end
 
 	-- Format beat4sprite and song path (long)
@@ -183,11 +188,12 @@ mindbox.spawn = function( ... )
 
 	local args = ...
 
+	local fontData = mindbox.Theme.Font
 	mindbox.windowPath = mindbox.Windows[ mindbox.Theme.Graphic ]
-	mindbox.fontPath = mindbox.Theme.Font.customFont or mindbox.Fonts[ mindbox.Theme.Font.Index ]
+	mindbox.fontPath = fontData.customFont or mindbox.Fonts[ fontData.Index ]
 
 	return loadfile( mindbox.Path .. "Console/Main.lua" )() .. { 
-		OnCommand=function() if args then mindbox.print( args ) end end 
+		OnCommand=function() if args then print( args ) end end 
 	}
 
 end

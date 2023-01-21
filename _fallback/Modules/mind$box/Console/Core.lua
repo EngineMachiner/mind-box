@@ -131,6 +131,8 @@ return Def.ActorFrame{
 
 		FadeCommand=function(self)
 
+			if not mindbox.Config.showFading then return end
+
 			self:finishtweening()
 
 			if not mindbox.Actor.shouldScroll then self:diffusealpha(0) return end
@@ -149,6 +151,8 @@ return Def.ActorFrame{
 		end,
 
 		FadeCommand=function(self)
+
+			if not mindbox.Config.showFading then return end
 
 			self:finishtweening()
 
