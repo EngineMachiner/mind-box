@@ -41,11 +41,10 @@ mindbox = mindbox or {
 	Path = "/Appearance/Themes/_fallback/Modules/mind$box/"
 }
 
-local config = mindbox.Config
-
--- This has to be updated often
 mindbox.Windows = getOnlyFiles( mindbox.Path .. "Graphics/Windows/" )
 mindbox.Fonts = find( FILEMAN:GetDirListing( mindbox.Path .. "Fonts/", true, true ), ".ini" )
+
+local config = mindbox.Config
 
 -- Remove useless data
 local function purge(tbl)
@@ -171,19 +170,25 @@ local function print( ... )
 
 	mindbox.lastConcat = s
 	
-	mindbox.Actor:playcommand("SpawnMindboxConsole")
+	local actor = mindbox.Actor
+	if actor then actor:playcommand("SpawnMindboxConsole")
+	else SCREENMAN:SystemMessage("mind$box: Console hasn't been created yet!") end
 	
 	if config.resetConfigOnPrint then resetConfig() end
 
 end
 mindbox.print = print
 
-mindbox.spawn = function()
+mindbox.spawn = function( ... )
+
+	local args = ...
 
 	mindbox.windowPath = mindbox.Windows[ mindbox.Theme.Graphic ]
 	mindbox.fontPath = mindbox.Theme.Font.customFont or mindbox.Fonts[ mindbox.Theme.Font.Index ]
 
-	return loadfile( mindbox.Path .. "Console/Main.lua" )() 
+	return loadfile( mindbox.Path .. "Console/Main.lua" )() .. { 
+		OnCommand=function() if args then mindbox.print( args ) end end 
+	}
 
 end
 
