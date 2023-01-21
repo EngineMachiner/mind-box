@@ -16,9 +16,9 @@ The log font ("_eurostile Outline") is originally from the Soundwaves theme.
 ## Usage - OutFox
 
 1. Drop the mind$box folder in the Modules folder of _fallback.
-2.a Store the mindbox variable with LoadModule()
-2.b Add mindbox.spawn() as an additional actor in the script you want for the console to show up (beware actors draw order).
-3. Run the functions like mindbox.print() in your Lua scripts or do mindbox.spawn(...).
+2. Store the mindbox variable with LoadModule()
+3. Add mindbox.spawn() as an additional actor in the script you want for the console to show up (beware actors draw order).
+4. Run the functions like mindbox.print() in your Lua scripts or do mindbox.spawn(...).
 
 ## Credits
 - AwfulRanger (for being available and answering my questions about Lua)
