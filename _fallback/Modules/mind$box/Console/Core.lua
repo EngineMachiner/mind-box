@@ -9,6 +9,7 @@ local limY = innerQuad.h * 0.875
 
 local tweenTime = 3					local stayOn, waitOn = tweenTime, tweenTime * 2
 
+local zoomScale = 720 / SCREEN_HEIGHT
 local scale = SCREEN_HEIGHT / 720
 
 local function quadTemplate()
@@ -55,7 +56,8 @@ return Def.ActorFrame{
 
 		Name="TextBlock",
 		InitCommand=function(self)
-			self:setsize( innerQuad.w, innerQuad.h )
+			zoomScale = 720 / SCREEN_HEIGHT
+			self:setsize( innerQuad.w * zoomScale, innerQuad.h * zoomScale )
 			self:EnableAlphaBuffer(true):Create()
 		end,
 
@@ -76,7 +78,7 @@ return Def.ActorFrame{
 
 				local textW, textH = self:GetZoomedWidth(), self:GetZoomedHeight()
 
-				if textW > innerQuad.w * 0.9 then self:zoom( innerQuad.w * 0.9 / textW ) end
+				if textW > innerQuad.w * 0.9 then self:zoom( innerQuad.w * 0.9 * zoomScale / textW ) end
 
 				self.nextY, textH = false, self:GetZoomedHeight()
 				
@@ -117,7 +119,7 @@ return Def.ActorFrame{
 	Def.Sprite{
 		InitCommand=function(self) 
 			self:SetTexture( self:GetParent():GetChild("TextBlock"):GetTexture() )
-			self:x( 20 * scale )
+			self:x( 20 * scale ):zoom( 1 / zoomScale )
 		end
 	},
 
