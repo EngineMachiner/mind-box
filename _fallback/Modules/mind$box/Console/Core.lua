@@ -49,6 +49,11 @@ return Def.ActorFrame{
 		self:sleep(stayOn + waitOn):linear(0.5):diffusealpha(0)
 	end,
 
+	OffCommand=function(self)
+		self:finishtweening()
+		self:RunCommandsOnChildren( function(child) child:finishtweening() end ) 
+	end,
+	
 	-- Create text texture
 	Def.ActorFrameTexture{
 
