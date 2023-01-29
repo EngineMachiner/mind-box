@@ -6,7 +6,8 @@ local function getOnlyFiles( path )
 	local toFilter = FILEMAN:GetDirListing( path, false, true )
 	
 	for k,v in pairs( toFilter ) do
-		local skip = false		for k2, v2 in pairs( onlyDirs ) do if v == v2 then skip = true break end end
+		local skip = false		
+		for k2, v2 in pairs( onlyDirs ) do if v == v2 then skip = true break end end
 		if not skip then output[#output+1] = v end
 	end
 
@@ -49,15 +50,13 @@ local config = mindbox.Config
 -- Remove useless data
 local function purge(tbl)
 
-	for k,v in pairs(tbl) do
-		if type(v) == "table" then purge(v) end
-	end
+	for k,v in pairs(tbl) do if type(v) == "table" then purge(v) end end
 
 	if tbl.ctx then tbl.ctx = nil end
 
 end
 
-local function concat( tbl, moveTo, spaces )
+local function pack( tbl, moveTo, spaces )
 
 	purge(tbl)			spaces = spaces or ''
 
@@ -90,15 +89,14 @@ local function concat( tbl, moveTo, spaces )
 
 			if not config.showObjectId then
 
-				if isObject then
-					v2 = v2:sub( 1, v2:find( " " ) - 1 )
+				if isObject then v2 = v2:sub( 1, v2:find( " " ) - 1 )
 				else v2 = v2:sub(1,5) end
 
 			end
 
 			if isParent and config.showChildren then v.Children = v:GetChildren() end
 
-			s = concat(v, {}, spaces)			
+			s = pack(v, {}, spaces)			
 			
 			spaces = spaces:sub(1, #spaces - 4)
 
@@ -117,7 +115,7 @@ local function concat( tbl, moveTo, spaces )
 			s = s .. ",\n"			if not isEmpty then s = s .. newLines end
 		end
 
-		if lastKey == k then s = s .. newLines  end
+		if lastKey == k then s = s .. newLines end
 
 		spaces = cachedSpace
 
@@ -143,6 +141,9 @@ local function concat( tbl, moveTo, spaces )
 	return moveTo
 
 end
+mindbox.pack = pack
+
+local function concat( tbl ) return table.concat( pack( tbl, {} ) ) end
 mindbox.concat = concat
 
 local function resetConfig() mindbox.Config = defaultConfig end
@@ -150,14 +151,9 @@ mindbox.resetConfig = resetConfig
 
 local function print( ... )
 
-	local tbl = table.pack(...)			tbl.n = nil
-	tbl = concat( tbl, {} )
+	local tbl = table.pack(...)			tbl.n = nil			local s = concat( tbl )
 
-	local s = table.concat(tbl)
-
-	if config.showTraces then
-		s = s .. "\n\n" .. debug.traceback(2)
-	end
+	if config.showTraces then s = s .. "\n\n" .. debug.traceback(2) end
 
 	-- Format beat4sprite and song path (long)
 	
