@@ -143,7 +143,12 @@ local function pack( tbl, moveTo, spaces )
 end
 mindbox.pack = pack
 
-local function concat( tbl ) return table.concat( pack( tbl, {} ) ) end
+local function concat( ... )
+
+	local tbl = table.pack( ... )			tbl.n = nil
+	return table.concat( pack( tbl, {} ) )
+	
+end
 mindbox.concat = concat
 
 local function resetConfig() mindbox.Config = defaultConfig end
@@ -151,7 +156,7 @@ mindbox.resetConfig = resetConfig
 
 local function print( ... )
 
-	local tbl = table.pack(...)			tbl.n = nil			local s = concat( tbl )
+	local s = concat( ... )
 
 	if config.showTraces then s = s .. "\n\n" .. debug.traceback(2) end
 
