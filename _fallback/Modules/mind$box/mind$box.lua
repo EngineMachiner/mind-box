@@ -151,6 +151,9 @@ local function concat( ... )
 end
 mindbox.concat = concat
 
+local function quickPrint( ... ) SCREENMAN:SystemMessage( mindbox.concat( ... ) ) end
+mindbox.quickPrint = quickPrint
+
 local function resetConfig() mindbox.Config = defaultConfig end
 mindbox.resetConfig = resetConfig
 
