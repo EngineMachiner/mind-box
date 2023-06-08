@@ -1,5 +1,5 @@
 
--- Can't load svg's that contain gradients. (maybe someday)
+-- Can't load SVGs that contain gradients.
 
 local border = { w = SCREEN_CENTER_X * 0.1, h = SCREEN_HEIGHT * 0.1 }
 local w = SCREEN_CENTER_X - border.w * 2		local h = SCREEN_HEIGHT - border.h
@@ -21,40 +21,24 @@ local function quadTemplate()
 
 end
 
-local function getRandomColor()
-
-	local c = {}
-
-	while #c <= 3 do
-
-		local num = math.random(500,1000) * 0.001
-		c[#c+1] = tostring(num) .. ","
-		
-	end
-
-	c = c[1] .. c[2] .. c[3] .. "1"
-
-	return color(c)
-
-end
-
 return Def.ActorFrame{
 
 	quadTemplate(),
 
 	InitCommand=function(self) self:CenterY():diffusealpha(0):x( w * 0.55 ) end,
+
 	OpenCommand=function(self)
 		self:finishtweening():playcommand("Fade")
 		self:linear(0.5):diffusealpha(1)
-		self:sleep(stayOn + waitOn):linear(0.5):diffusealpha(0)
+		self:sleep( stayOn + waitOn ):linear(0.5):diffusealpha(0)
 	end,
 
 	OffCommand=function(self)
 		self:finishtweening()
 		self:RunCommandsOnChildren( function(child) child:finishtweening() end ) 
 	end,
-	
-	-- Create text texture
+
+	-- Create text texture.
 	Def.ActorFrameTexture{
 
 		Name="TextBlock",
@@ -74,10 +58,10 @@ return Def.ActorFrame{
 				
 				local color = Color.White
 				stayOn, waitOn = tweenTime, tweenTime
-				local customColor = mindbox.Theme.Font.Color
+				local specificColor = mindbox.Theme.Font.Color
 
-				if mindbox.Theme.Font.randomColor then color = getRandomColor()
-				elseif customColor then color = customColor end
+				if mindbox.Theme.Font.randomColor then color = tapLua.Color.random()
+				elseif specificColor then color = specificColor end
 
 				self:finishtweening():settext( mindbox.lastConcat )
 
@@ -120,7 +104,7 @@ return Def.ActorFrame{
 
 	},
 
-	-- Put texture on sprite
+	-- Put texture on sprite.
 	Def.Sprite{
 		InitCommand=function(self) 
 			self:SetTexture( self:GetParent():GetChild("TextBlock"):GetTexture() )
@@ -128,7 +112,7 @@ return Def.ActorFrame{
 		end
 	},
 
-	-- Top fade
+	-- Top fade.
 	quadTemplate() .. {
 
 		InitCommand=function(self)
@@ -149,7 +133,7 @@ return Def.ActorFrame{
 
 	},
 
-	-- Bottom fade
+	-- Bottom fade.
 	quadTemplate() .. {
 
 		InitCommand=function(self)
@@ -170,7 +154,7 @@ return Def.ActorFrame{
 
 	},
 
-	-- Window
+	-- Window.
 	Def.Sprite{
 		Texture=mindbox.windowPath,
 		InitCommand=function(self)
@@ -179,7 +163,7 @@ return Def.ActorFrame{
 		end
 	},
 
-	-- Title
+	-- Title.
 	Def.ActorFrame{
 
 		InitCommand=function(self) self:y( - h * 0.476 ):zoom( 0.5 * scale ) end,
