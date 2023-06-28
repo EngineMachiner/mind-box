@@ -3,6 +3,8 @@
 # mind$box
 mind$box is a tool and library to debug and display / print in-game. Check mind$box.lua for more.
 
+mind$box has been tested through from StepMania 5.0.12 to 5.3 / OutFox.
+
 https://user-images.githubusercontent.com/15896027/137427034-f411f697-c420-409d-8e56-a170546f9b0e.mp4
 
 ## Usage
