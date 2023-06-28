@@ -9,11 +9,21 @@ https://user-images.githubusercontent.com/15896027/137427034-f411f697-c420-409d-
 
 ## Usage
 0. Make sure you have [tapLua](https://github.com/EngineMachiner/tapLua).
+
+### OutFox
+
 1. Copy the mind$box folder to fallback Modules folder.
 2. Load mind$box.lua using LoadModule() to fallback's first screen.
 
    For example in ScreenInit overlay's script: <br>
    <img src=https://github.com/EngineMachiner/mind-box/assets/15896027/d9384dea-a1d7-4c7b-a238-5b74e445f01a width=400>
+
+### StepMania
+
+1. Copy the beat4sprite folder in your "Stepmania/Scripts" folder.
+2. Reload scripts once at first screen if something goes wrong.
+
+---
 
 3. Add mindbox.spawn() as an additional actor in the script you want for the console to show up (beware actors draw order).
 4. Run functions like mindbox.spawn(), mindbox.print() or mindbox.quickPrint() in your Lua scripts.
