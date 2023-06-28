@@ -99,7 +99,13 @@ mindbox.pack = pack
 
 mindbox.concat = function(...)
 
-	local tbl = table.pack(...)			tbl.n = nil
+	local tbl
+
+	-- Older Lua versions don't have table.pack.
+	if table.pack then
+		tbl = table.pack(...) tbl.n = nil
+	else tbl = { ... } end
+
 	return table.concat( pack( tbl, {} ) )
 
 end

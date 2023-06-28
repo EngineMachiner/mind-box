@@ -1,5 +1,14 @@
 
-mindbox = { Path = "/Appearance/Themes/_fallback/Modules/mind$box/" }
+local path = "/Appearance/Themes/_fallback/Modules/mind$box/"
+
+if tonumber( VersionDate() ) < 20191216 then
+
+    LoadModule = function(s) loadfile( "Scripts/" .. s )() end
+	path = "/Scripts/mind$box/"
+
+end
+
+mindbox = { Path = path }
 
 LoadModule("mind$box/Config.lua")		LoadModule("mind$box/Concat.lua")
 LoadModule("mind$box/Print.lua")
