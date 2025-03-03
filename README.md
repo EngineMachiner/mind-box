@@ -56,6 +56,15 @@ compatible with older versions.
   4. Use `mindbox.print(...)` to print into the console or `mindbox.sysPrint(...)`
   if you want to use the system message function.
 
+---
+
+Remember, if you're having problems with the texture being white, not showing up 
+and you're using legacy builds you should enable only OpenGL as renderer in 
+your `Preferences.ini` due to D3D not being able to render textures in these builds.
+```
+VideoRenderers=opengl
+```
+
 ## Credits
 - [TeamRizu](https://github.com/TeamRizu)
 
