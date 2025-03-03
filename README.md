@@ -55,5 +55,6 @@ mind$box focuses to be compatible with newer game builds, so it may not be compa
   if you want to use the system message function.
 
 ## Credits
-- [AwfulRanger](https://github.com/AwfulRanger)
 - [TeamRizu](https://github.com/TeamRizu)
+
+Thank you to everyone who contributed to the development of this project!
