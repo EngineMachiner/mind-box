@@ -4,7 +4,7 @@ local isLegacy = tapLua.isLegacy()
 
 local path = "/Appearance/Themes/_fallback/Modules/mind$box/"
 
-path = isLegacy and "/Scripts/mind$box/" or path
+path = isLegacy and "/Modules/mind$box/" or path
 
 mindbox = mindbox or { Path = path }
 
