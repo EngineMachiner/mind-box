@@ -14,6 +14,8 @@ compatible with older versions.
 
   1. Use [tapLua](https://github.com/EngineMachiner/tapLua).
 
+---
+
 ### OutFox
 
   2. Clone the repository in the fallback's Modules folder.
