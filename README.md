@@ -1,33 +1,59 @@
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W32691S)
 
 # mind$box
-mind$box is a tool and library to debug and display / print in-game. Check mind$box.lua for more.
 
-mind$box has been tested through from StepMania 5.0.12 to 5.3 / OutFox.
+**mind$box** is a **debug console** for **[StepMania](https://github.com/stepmania/stepmania) and [OutFox](https://github.com/TeamRizu/OutFox)** designed to display information and data.
 
 https://user-images.githubusercontent.com/15896027/137427034-f411f697-c420-409d-8e56-a170546f9b0e.mp4
 
+mind$box focuses to be compatible with newer game builds, so it may not be compatible with older versions.
+
 ## Usage
-0. Make sure you have [tapLua](https://github.com/EngineMachiner/tapLua).
+
+  1. Use [tapLua](https://github.com/EngineMachiner/tapLua).
 
 ### OutFox
 
-1. Copy the mind$box folder to fallback Modules folder.
-2. Load mind$box.lua using LoadModule() to fallback's first screen.
+  2. Clone the repository in the fallback's Modules folder.
+  ```
+  git clone https://github.com/EngineMachiner/mindbox mind\$box
+  ```
 
-   For example in ScreenInit overlay's script: <br>
-   <img src=https://github.com/EngineMachiner/mind-box/assets/15896027/d9384dea-a1d7-4c7b-a238-5b74e445f01a width=400>
+  3. Load tapLua first, then load mind$box and add the console actor
+  in `ScreenSystemLayer aux.lua` to make the console actor persistent:
+  ```lua
+  -- Themes/_fallback/BGAnimations/ScreenSystemLayer aux.lua
 
-### StepMania
+  LoadModule("tapLua/tapLua.lua")
+  LoadModule("mind$box/mind$box.lua")
 
-1. Copy the beat4sprite folder in your "Stepmania/Scripts" folder.
-2. Reload scripts once at first screen if something goes wrong.
+  return mindbox.console()
+  ```
+
+### Legacy
+
+  2. Clone the repository in the same Modules folder following the same
+  steps for tapLua cloning.
+  ```
+  git clone https://github.com/EngineMachiner/mindbox mind\$box
+  ```
+
+  3. Load tapLua first, then load mind$box and add the console actor
+  in `ScreenSystemLayer aux.lua` to make the console actor persistent:
+  ```lua
+  -- Themes/_fallback/BGAnimations/ScreenSystemLayer aux.lua
+
+  dofile("Modules/tapLua/tapLua.lua")
+  LoadModule("mind$box/mind$box.lua")
+
+  return mindbox.console()
+  ```
 
 ---
 
-3. Add mindbox.spawn() as an additional actor in the script you want for the console to show up (beware actors draw order).
-4. Run functions like mindbox.spawn(), mindbox.print() or mindbox.quickPrint() in your Lua scripts.
+  4. Use `mindbox.print(...)` to print into the console or `mindbox.sysPrint(...)`
+  if you want to use the system message function.
 
 ## Credits
-- AwfulRanger
-- Project Moondance developers.
+- [AwfulRanger](https://github.com/AwfulRanger)
+- [TeamRizu](https://github.com/TeamRizu)
