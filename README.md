@@ -12,6 +12,8 @@ compatible with older versions.
 
 ## Usage
 
+Be aware that to successfully install mind$box in your game build, it's important to have a **basic understanding of scripting and theme structure**.
+
   1. Use [tapLua](https://github.com/EngineMachiner/tapLua).
 
 ---
