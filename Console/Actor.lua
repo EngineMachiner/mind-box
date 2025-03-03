@@ -183,9 +183,9 @@ return Def.ActorFrame {
 
 		PostInitCommand=function(self) 
             
-            local h = console():GetHeight()
+            local h = console():GetHeight()         local offset = 24 * scale
 
-            self:y( - h * 0.5 + 24 ):zoom( scale * 0.5 ) 
+            self:y( - h * 0.5 + offset ):zoom( scale * 0.5 )
         
         end,
 

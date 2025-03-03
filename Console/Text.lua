@@ -17,7 +17,9 @@ local function size()
 
     local p = console()             local w, h = p:GetWidth(), p:GetHeight()
 
-    w = w * resScale * 0.75        h = h * resScale * 0.9
+    w = w * resScale * 0.75         w = w / scale
+    
+    h = h * resScale * 0.9          h = h / scale
 
     return w, h 
 
