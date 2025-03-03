@@ -5,7 +5,7 @@
 **mind$box** is a **debug console** for **[StepMania 5](https://github.com/stepmania/stepmania) and [OutFox](https://github.com/TeamRizu/OutFox)** 
 designed to display information and data.
 
-https://user-images.githubusercontent.com/15896027/137427034-f411f697-c420-409d-8e56-a170546f9b0e.mp4
+https://github.com/user-attachments/assets/6b68068e-5170-4935-9646-03ab4d3cb311
 
 mind$box focuses to be compatible with newer game builds, so it may not be
 compatible with older versions.
